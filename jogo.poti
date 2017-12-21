@@ -1,0 +1,300 @@
+use "jerimum"
+background = Imagem("campo2.png")
+var ball := Imagem("bola.png") var angbola := 0.0
+jgdae = Imagem("jgdae.png") jgdad = Imagem("jgdad.png") var pernaae := Imagem("pernaae.png") var pernaad := Imagem("pernaad.png")
+jgdve = Imagem("jgdve.png") jgdvd = Imagem("jgdvd.png") var pernave := Imagem("pernave.png") var pernavd := Imagem("pernavd.png")
+var jgda := jgdad   var jgdv := jgdve
+var pernaa1 := pernaad var pernav1 := pernave
+var pernaa2 := pernaad var pernav2 := pernave
+var xja := 250 var xjv := 900
+var yja := 340 var yjv := 340 var pulando1 := falso var pulando2 := falso
+var xb := 570 var yb := 0
+var angpernaa1 := 0.0 var angpernaa2 := 0.0
+var angpernav1 := 0.0 var angpernav2 := 0.0
+var gol1 := 1 var gol2 := 1
+var gols := [Imagem("0.png"),Imagem("1.png"),Imagem("2.png"),Imagem("3.png"),Imagem("4.png"),Imagem("5.png")]
+var chute1 := falso var chute2 := falso var bola_no_ar := falso var rd := 20.0 var re := 20.0
+var m_v_b1_d := falso  var vbd := 0
+var m_v_b1_e := falso  var vbe := 0
+var kb := falso       var kbc := 0
+var descendo := falso
+var v_xd := 0
+var v_xe := 0
+
+#Movimentação
+
+mv_1_right()
+    xja := xja + 5
+    jgda:=jgdad
+    pernaa1 := pernaad
+    pernaa2 := pernaad
+    angpernaa1 := angpernaa1 - 2
+    angpernaa2 := angpernaa2 + 2
+fim
+
+mv_1_left()
+    xja := xja - 5
+    jgda:=jgdae
+    pernaa1:=pernaae
+    pernaa2:=pernaae
+    angpernaa1 := angpernaa1 + 2
+    angpernaa2 := angpernaa2 - 2
+fim
+
+jump_1()
+yja := yja - 10
+fim
+
+
+mv_2_right()
+    xjv := xjv + 5
+    jgdv:=jgdvd
+    pernav1 := pernavd
+    pernav2 := pernavd
+    angpernav1 := angpernav1 - 2
+    angpernav2 := angpernav2 + 2
+fim
+
+mv_2_left()
+    xjv := xjv - 5
+    jgdv:=jgdve
+    pernav1 := pernave
+    pernav2 := pernave
+    angpernav1 := angpernav1 - 2
+    angpernav2 := angpernav2 + 2
+fim
+
+jump_2()
+yjv := yjv - 10
+fim
+
+refresh()
+se Teclado.TECLA_D entao
+   mv_1_right
+fim
+
+ se Teclado.TECLA_A entao
+   mv_1_left
+   fim
+
+   se angpernaa1 >= 30 entao
+   angpernaa1 := 0.0
+   angpernaa2 := 0.0
+   senaose angpernaa1 <= -30
+   angpernaa1 := 0.0
+   angpernaa2 := 0.0
+fim
+
+se Teclado.TECLA_W e yja == 340 entao
+   pulando1 := verdadeiro
+fim
+se pulando1 entao
+  jump_1
+fim
+se yja == 240 entao
+ pulando1 := falso
+fim
+
+se yja < 340 e pulando1 == falso entao
+   yja := yja + 10
+ fim
+
+se Teclado.TECLA_PARA_DIREITA entao
+   mv_2_right
+fim
+
+se Teclado.TECLA_PARA_ESQUERDA entao
+   mv_2_left
+fim
+se angpernav1 >= 30 entao
+angpernav1 := 0.0
+angpernav2 := 0.0
+senaose angpernav1 <= -30
+angpernav1 := 0.0
+angpernav2 := 0.0
+fim
+
+se Teclado.TECLA_PARA_CIMA e yjv == 340 entao
+   pulando2 := verdadeiro
+fim
+se pulando2 entao
+  jump_2
+fim
+se yjv == 240 entao
+ pulando2 := falso
+fim
+
+se yjv < 340  e pulando2 == falso entao
+   yjv := yjv + 10
+ fim
+
+ #colisão dos jogadores entre si
+
+ se abs(xja - xjv) <= 20 e abs(yja - yjv) <= 10 entao
+   se xja < xjv entao
+     xjv := xjv + 5
+     xja := xja - 5
+   fim
+   se xja > xjv entao
+     xjv := xjv - 5
+     xja := xja + 5
+   fim
+ fim
+
+  #colisão dos jogadores com a trave
+
+  se xja <= 130 entao
+    xja := 130
+  fim
+  se xja >= 1020 entao
+    xja := 1020
+  fim
+  se xjv <= 130 entao
+    xjv := 130
+  fim
+  se xjv >= 1020 entao
+    xjv := 1020
+  fim
+
+#gravidade da bola
+se yb < 350 e chute1 == falso e chute2 == falso e kb == falso entao
+ yb := yb + 10
+ descendo := verdadeiro
+fim
+se yb == 350 entao
+  descendo := falso
+fim
+#colisão com a bola
+
+
+#condição de chute
+se Teclado.TECLA_E e abs(xja-xb) <= 30 e abs(yja-yb) <= 50  entao
+ chute1 := verdadeiro
+fim
+se Teclado.TECLA_0 e abs(xjv-xb) <= 30 e abs(yjv-yb) <= 50  entao
+chute2 := verdadeiro
+fim
+se chute1 e xja <= xb e pernaa1 == pernaad entao
+ xb := xb + 10
+ yb := yb - 10
+ descendo := falso
+ angbola := angbola+10
+ rd := rd + 1
+fim
+se chute1 e xja >= xb e pernaa1 == pernaae entao
+xb := xb - 10
+yb := yb -10
+descendo := falso
+angbola := angbola-10
+re := re + 1
+fim
+
+se chute2 e xjv <= xb e pernav1 == pernavd  entao
+ xb := xb + 10
+ yb := yb - 10
+ descendo := falso
+ angbola := angbola+10
+ rd := rd + 1
+fim
+se chute2 e xjv >= xb e pernav1 == pernave entao
+xb := xb - 10
+yb := yb - 10
+descendo := falso
+angbola := angbola-10
+re := re + 1
+
+fim
+
+se re == 30  entao
+chute1 := falso
+chute2 := falso
+re := 10
+fim
+se rd == 30 entao
+chute1 := falso
+chute2 := falso
+rd := 10
+fim
+
+se (abs(xja-xb) <= 10 ou abs(xjv-xb) <= 10) e (abs(yja - yb) <= 50 ou abs(yjv - yb) <= 50) entao
+rd := 0
+re := 0
+fim
+se rd < 20 entao
+xb := xb + 10
+angbola := angbola+10
+rd := rd + 0.5
+fim
+se re < 20 entao
+xb := xb - 10
+angbola := angbola-10
+re := re + 0.5
+fim
+
+
+#animação do chute
+se Teclado.TECLA_E e pernaa1 == pernaad entao
+ angpernaa1 := angpernaa1 - 30
+fim
+se Teclado.TECLA_E e pernaa1 == pernaae entao
+ angpernaa1 := angpernaa1 + 30
+fim
+
+se Teclado.TECLA_0 e pernav1 == pernavd entao
+ angpernav1 := angpernav1 - 30
+fim
+se Teclado.TECLA_0 e pernav1 == pernave entao
+ angpernav1 := angpernav1 + 30
+fim
+#colisão jogador-bola
+
+se abs(xja-xb) <= 10 e abs(xjv-xja) >= 50 e abs(yja-yb) <= 10 entao
+   se xja <= xb entao
+    v_xd := 100
+    xb := xb + v_xd div 20
+    v_xd := v_xd - 10
+    angbola := angbola + v_xd div 4
+  fim
+   se xja > xb entao
+     v_xe := 100
+     xb := xb - v_xe div 20
+     v_xe := v_xe - 10
+     angbola := angbola - v_xe div 4
+   fim
+ fim
+   se abs(xjv-xb) <= 10 e abs(xjv-xja) >= 50 e abs(yjv-yb) <= 10 entao
+      se xjv <= xb entao
+       v_xd := 100
+       xb := xb + v_xd div 20
+       v_xd := v_xd - 10
+       angbola := angbola + v_xd div 4
+      fim
+      se xjv > xb entao
+        v_xe := 100
+        xb := xb - v_xe div 20
+        v_xe := v_xe - 10
+        angbola := angbola - v_xe div 4
+      fim
+  fim
+
+
+fim
+
+
+
+
+draw()
+    background.desenhe(0,0,0)
+    jgda.desenhe(xja,yja,1)
+    jgdv.desenhe(xjv,yjv,1)
+    pernaa1.desenhe(xja,yja,1,angpernaa1)
+    pernaa1.desenhe(xja,yja,1,angpernaa2)
+    pernav1.desenhe(xjv,yjv,1,angpernav1)
+    pernav2.desenhe(xjv,yjv,1,angpernav2)
+    ball.desenhe(xb,yb,2,angbola)
+    gols[gol1].desenhe(100,10,10)
+    gols[gol2].desenhe(1000,10,10)
+fim
+
+
+jogo.iniciar("1on1",1250,650,refresh,draw,60)

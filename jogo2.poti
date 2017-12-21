@@ -1,0 +1,433 @@
+use "jerimum"
+screen1 = Imagem("screen1.png") play = Imagem("play.png") exit = Imagem("exit.png")
+background1 = Imagem("campo2.png")
+var background := screen1
+var ball := Imagem("bola.png") var angbola := 0.0
+jgdae = Imagem("jgdae.png") jgdad = Imagem("jgdad.png") var pernaae := Imagem("pernaae.png") var pernaad := Imagem("pernaad.png")
+jgdve = Imagem("jgdve.png") jgdvd = Imagem("jgdvd.png") var pernave := Imagem("pernave.png") var pernavd := Imagem("pernavd.png")
+var jgda := jgdad   var jgdv := jgdve
+var pernaa1 := pernaad var pernav1 := pernave
+var pernaa2 := pernaad var pernav2 := pernave
+var xja := 250 var xjv := 900
+var yja := 340 var yjv := 340 var pulando1 := falso var pulando2 := falso
+var xb := 570 var yb := 0
+var angpernaa1 := 0.0 var angpernaa2 := 0.0
+var angpernav1 := 0.0 var angpernav2 := 0.0
+var gol1 := 1 var gol2 := 1
+var gols := [Imagem("0.png"),Imagem("1.png"),Imagem("2.png"),Imagem("3.png"),Imagem("4.png"),Imagem("5.png")]
+var chute1 := falso var chute2 := falso var bola_no_ar := falso var rd := 20.0 var re := 20.0
+var m_v_b1_d := falso  var vbd := 0
+var m_v_b1_e := falso  var vbe := 0
+var kb := falso       var kbc := 0
+var descendo := falso
+var v_xd := 0
+var v_xe := 0
+
+se background == screen1 entao
+xja := 400 yja := 500
+xjv := 450 yjv := 500
+fim
+
+
+mv_1_right()
+    xja := xja + 5
+    jgda:=jgdad
+    pernaa1 := pernaad
+    pernaa2 := pernaad
+    angpernaa1 := angpernaa1 - 2
+    angpernaa2 := angpernaa2 + 2
+fim
+
+mv_1_left()
+    xja := xja - 5
+    jgda:=jgdae
+    pernaa1:=pernaae
+    pernaa2:=pernaae
+    angpernaa1 := angpernaa1 + 2
+    angpernaa2 := angpernaa2 - 2
+fim
+
+jump_1()
+yja := yja - 10
+fim
+
+
+mv_2_right()
+    xjv := xjv + 5
+    jgdv:=jgdvd
+    pernav1 := pernavd
+    pernav2 := pernavd
+    angpernav1 := angpernav1 - 2
+    angpernav2 := angpernav2 + 2
+fim
+
+mv_2_left()
+    xjv := xjv - 5
+    jgdv:=jgdve
+    pernav1 := pernave
+    pernav2 := pernave
+    angpernav1 := angpernav1 - 2
+    angpernav2 := angpernav2 + 2
+fim
+
+jump_2()
+yjv := yjv - 10
+fim
+
+reset()
+xja := 250 xjv := 900
+yja := 340 yjv := 340
+xb := 570 yb := 0
+chute1 := falso
+chute2 := falso
+re := 20
+rd := 20
+angpernaa1 := 0
+angpernaa2 := 0
+angpernav1 := 0
+angpernav2 := 0
+pernaa1 := pernaad
+pernaa2 := pernaad
+pernav1 := pernave
+pernav2 := pernave
+jgda := jgdad   jgdv := jgdve
+m_v_b1_d := falso
+m_v_b1_e := falso
+vbd := 0
+vbe := 0
+kb := falso
+kbc := 0
+v_xd := 0
+v_xe := 0
+
+fim
+
+
+
+refresh()
+se background == background1 entao
+   se Teclado.TECLA_D entao
+      mv_1_right
+   fim
+
+    se Teclado.TECLA_A entao
+      mv_1_left
+      fim
+
+      se angpernaa1 >= 30 entao
+      angpernaa1 := 0.0
+      angpernaa2 := 0.0
+      senaose angpernaa1 <= -30
+      angpernaa1 := 0.0
+      angpernaa2 := 0.0
+   fim
+
+   se Teclado.TECLA_W e yja == 340 entao
+      pulando1 := verdadeiro
+   fim
+   se pulando1 entao
+     jump_1
+   fim
+   se yja == 240 entao
+    pulando1 := falso
+   fim
+
+   se yja < 340 e pulando1 == falso entao
+      yja := yja + 10
+    fim
+
+   se Teclado.TECLA_PARA_DIREITA entao
+      mv_2_right
+   fim
+
+   se Teclado.TECLA_PARA_ESQUERDA entao
+      mv_2_left
+   fim
+   se angpernav1 >= 30 entao
+   angpernav1 := 0.0
+   angpernav2 := 0.0
+ senaose angpernav1 <= -30
+   angpernav1 := 0.0
+   angpernav2 := 0.0
+fim
+
+   se Teclado.TECLA_PARA_CIMA e yjv == 340 entao
+      pulando2 := verdadeiro
+   fim
+   se pulando2 entao
+     jump_2
+   fim
+   se yjv == 240 entao
+    pulando2 := falso
+   fim
+
+   se yjv < 340  e pulando2 == falso entao
+      yjv := yjv + 10
+    fim
+
+  se abs(xb-xja) <= 10 e yb - yja <= 30 entao
+    se xja >= xb entao
+        m_v_b1_e := verdadeiro
+        v_xe := v_xe + 100
+      fim
+    se xja < xb entao
+        m_v_b1_d := verdadeiro
+        v_xd := v_xd + 100
+    fim
+fim
+
+se v_xd >= 100 entao
+  v_xd := 100
+fim
+se v_xe >= 100 entao
+  v_xe := 100
+fim
+
+se abs(xb-xjv) <= 10 e yb - yjv <= 30 entao
+    se xjv >= xb entao
+        m_v_b1_e := verdadeiro
+        v_xe := v_xe + 100
+      fim
+    se xjv < xb entao
+        m_v_b1_d := verdadeiro
+        v_xd := v_xd + 100
+    fim
+fim
+
+
+ se abs(xb-xjv) <= 10 e abs(yb-yjv) <= 40 e descendo  entao
+ kb := verdadeiro
+ fim
+ se abs(xb-xja) <= 10 e abs(yb-yja) <= 40 e descendo  entao
+ kb := verdadeiro
+ fim
+ se abs(xja - xjv) <= 10 entao
+   kb := falso
+   kbc := 0
+ fim
+
+ se kb então
+   yb := yb - 10
+   kbc := kbc + 1
+   chute1 := falso
+   chute2:= falso
+ fim
+
+
+se kbc >= 10 entao
+kb := falso
+kbc := 0
+fim
+
+
+  se m_v_b1_d == verdadeiro e abs(xja - xjv) >= 10 e abs(xja-xb) <> abs(xjv-xb) entao
+     xb := xb + (v_xd div 10)
+     angbola := angbola + 15
+     v_xd := v_xd - 5
+     fim
+  se m_v_b1_e == verdadeiro e abs(xja - xjv) >= 10 e abs(xja-xb) <> abs(xjv-xb) entao
+     xb := xb - (v_xe div 10)
+     angbola := angbola - 15
+     v_xe := v_xe - 5
+  fim
+    se v_xd <= 0 entao
+      m_v_b1_d := falso
+      v_xd := 0
+    fim
+    se v_xe <= 0 entao
+     m_v_b1_e := falso
+     v_xe := 0
+    fim
+
+  se abs(xja - xjv) <= 20 e abs(yja - yjv) <= 10 entao
+    se xja < xjv entao
+      xjv := xjv + 5
+      xja := xja - 5
+    fim
+    se xja > xjv entao
+      xjv := xjv - 5
+      xja := xja + 5
+    fim
+  fim
+  se xja <= 130 entao
+    xja := 130
+  fim
+  se xja >= 1020 entao
+    xja := 1020
+  fim
+  se xjv <= 130 entao
+    xjv := 130
+  fim
+  se xjv >= 1020 entao
+    xjv := 1020
+  fim
+  se xb >= 1040 entao
+     gol1 := gol1 + 1
+     reset
+  fim
+  se xb <= 115 entao
+    gol2 := gol2 + 1
+    reset
+  fim
+  se Teclado.TECLA_E e pernaa1 == pernaad entao
+   angpernaa1 := angpernaa1 - 30
+  fim
+  se Teclado.TECLA_E e pernaa1 == pernaae entao
+   angpernaa1 := angpernaa1 + 30
+  fim
+
+  se Teclado.TECLA_0 e pernav1 == pernavd entao
+   angpernav1 := angpernav1 - 30
+  fim
+  se Teclado.TECLA_0 e pernav1 == pernave entao
+   angpernav1 := angpernav1 + 30
+  fim
+  se Teclado.TECLA_E e abs(xja-xb) <= 30 e yb >= 350  entao
+   chute1 := verdadeiro
+   kb := falso
+ fim
+ se Teclado.TECLA_0 e abs(xjv-xb) <= 30 e yb >= 350  entao
+  chute2 := verdadeiro
+  kb := falso
+fim
+se chute1 e xja <= xb e pernaa1 == pernaad entao
+   xb := xb + 10
+   yb := yb - 10
+   descendo := falso
+   angbola := angbola+10
+   rd := rd + 1
+fim
+se chute1 e xja >= xb e pernaa1 == pernaae entao
+ xb := xb - 10
+ yb := yb -10
+ descendo := falso
+ angbola := angbola-10
+ re := re + 1
+fim
+
+se chute2 e xjv <= xb e pernav1 == pernavd  entao
+   xb := xb + 10
+   yb := yb - 10
+   descendo := falso
+   angbola := angbola+10
+   rd := rd + 1
+fim
+se chute2 e xjv >= xb e pernav1 == pernave entao
+ xb := xb - 10
+ yb := yb - 10
+ descendo := falso
+ angbola := angbola-10
+ re := re + 1
+
+fim
+
+se abs(xja - xjv) <= 5 e abs(xb - xjv) <= 5 e abs(xb - xja) <= 5 entao
+var a := aleatorio(1,2)
+se a == 1 entao
+xb := xb + 10
+fim
+se a == 2 entao
+xb := xb - 10
+fim
+fim
+
+se re == 30  entao
+chute1 := falso
+chute2 := falso
+re := 10
+fim
+se rd == 30 entao
+chute1 := falso
+chute2 := falso
+rd := 10
+fim
+se rd < 20 entao
+xb := xb + 10
+angbola := angbola+10
+rd := rd + 0.5
+fim
+se re < 20 entao
+xb := xb - 10
+angbola := angbola-10
+re := re + 0.5
+fim
+
+se yb < 350 e chute1 == falso e chute2 == falso e kb == falso entao
+ yb := yb + 10
+ descendo := verdadeiro
+fim
+se yb == 350 entao
+  descendo := falso
+fim
+
+se Teclado.TECLA_R ou gol1==6 ou gol2 == 6 entao
+  reset
+  background := screen1
+  gol1:=1
+  gol2:=1
+fim
+
+fim
+
+ se background == screen1 entao
+  mv_1_right
+  mv_2_right
+  se angpernaa1 >= 30 entao
+  angpernaa1 := 0.0
+  angpernaa2 := 0.0
+  senaose angpernaa1 <= -30
+  angpernaa1 := 0.0
+  angpernaa2 := 0.0
+fim
+se angpernav1 >= 30 entao
+angpernav1 := 0.0
+angpernav2 := 0.0
+senaose angpernav1 <= -30
+angpernav1 := 0.0
+angpernav2 := 0.0
+fim
+
+se xjv >= 1250 entao
+   xjv := 400
+ fim
+ se xja >= 1250 entao
+   xja := 400
+ fim
+ se Mouse.BOTAO_ESQUERDO e Mouse.x <= 300 e Mouse.y >= 10 e Mouse.y <= 120 entao
+
+   background := background1
+  reset
+ fim
+fim
+
+fim
+
+
+draw()
+    background.desenhe(0,0,0)
+    se background == background1 entao
+    jgda.desenhe(xja,yja,1)
+    jgdv.desenhe(xjv,yjv,1)
+    pernaa1.desenhe(xja,yja,1,angpernaa1)
+    pernaa1.desenhe(xja,yja,1,angpernaa2)
+    pernav1.desenhe(xjv,yjv,1,angpernav1)
+    pernav2.desenhe(xjv,yjv,1,angpernav2)
+    ball.desenhe(xb,yb,2,angbola)
+    gols[gol1].desenhe(100,10,10)
+    gols[gol2].desenhe(1000,10,10)
+  fim
+  se background == screen1 entao
+    play.desenhe(0,5,1)
+    exit.desenhe(0,535,1)
+    jgda.desenhe(xja,yja,1)
+    jgdv.desenhe(xjv,yjv,1)
+    pernaa1.desenhe(xja,yja,1,angpernaa1)
+    pernaa1.desenhe(xja,yja,1,angpernaa2)
+    pernav1.desenhe(xjv,yjv,1,angpernav1)
+    pernav2.desenhe(xjv,yjv,1,angpernav2)
+  fim
+
+fim
+
+
+jogo.iniciar("1on1",1250,650,refresh,draw,60)
